@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, OnInit, computed } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,7 +26,10 @@ export class BookListComponent implements OnInit {
   private readonly bookService = inject(BookService);
   private readonly dialog = inject(MatDialog);
 
-  protected readonly books = signal<Book[]>([]);
+  private readonly booksData = signal<Book[]>([]);
+  protected readonly books = computed(() =>
+    [...this.booksData()].sort((a, b) => Number(b.id) - Number(a.id))
+  );
   protected readonly selectedBooks = signal<Set<number>>(new Set());
   protected readonly displayedColumns = ['select', 'title', 'author', 'year', 'isRead'];
   protected readonly isLoading = signal(false);
@@ -39,7 +42,7 @@ export class BookListComponent implements OnInit {
     this.isLoading.set(true);
     this.bookService.getAll().subscribe({
       next: (books) => {
-        this.books.set(books);
+        this.booksData.set(books);
         this.isLoading.set(false);
       },
       error: (error) => {
