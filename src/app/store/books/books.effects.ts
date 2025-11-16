@@ -85,6 +85,33 @@ export const deleteBook = createEffect(
   { functional: true }
 );
 
+export const toggleBookReadStatus = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const bookService = inject(BookService);
+
+    return actions$.pipe(
+      ofType(BooksActions.toggleBookReadStatus),
+      switchMap(({ id }) =>
+        bookService.getById(id).pipe(
+          switchMap((book) =>
+            bookService.update(id, { isRead: !book.isRead }).pipe(
+              map((updatedBook) => BooksActions.updateBookSuccess({ book: updatedBook })),
+              catchError((error) =>
+                of(BooksActions.updateBookFailure({ error: error.message }))
+              )
+            )
+          ),
+          catchError((error) =>
+            of(BooksActions.loadBooksFailure({ error: error.message }))
+          )
+        )
+      )
+    );
+  },
+  { functional: true }
+);
+
 export const handleErrors = createEffect(
   () => {
     const actions$ = inject(Actions);
