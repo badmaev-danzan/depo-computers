@@ -1,210 +1,210 @@
 {
   "books": [
     {
-      "id": "1",
+      "id": 1,
       "title": "Война и мир",
       "author": "Лев Толстой",
       "year": 1869,
       "isRead": true
     },
     {
-      "id": "2",
+      "id": 2,
       "title": "Преступление и наказание",
       "author": "Фёдор Достоевский",
       "year": 1866,
       "isRead": false
     },
     {
-      "id": "3",
+      "id": 3,
       "title": "Мастер и Маргарита",
       "author": "Михаил Булгаков",
       "year": 1967,
       "isRead": true
     },
     {
-      "id": "4",
+      "id": 4,
       "title": "Анна Каренина",
       "author": "Лев Толстой",
       "year": 1877,
       "isRead": false
     },
     {
-      "id": "5",
+      "id": 5,
       "title": "Евгений Онегин",
       "author": "Александр Пушкин",
       "year": 1833,
       "isRead": true
     },
     {
-      "id": "6",
+      "id": 6,
       "title": "Братья Карамазовы",
       "author": "Фёдор Достоевский",
       "year": 1880,
       "isRead": false
     },
     {
-      "id": "7",
+      "id": 7,
       "title": "Идиот",
       "author": "Фёдор Достоевский",
       "year": 1869,
       "isRead": true
     },
     {
-      "id": "8",
+      "id": 8,
       "title": "Мёртвые души",
       "author": "Николай Гоголь",
       "year": 1842,
       "isRead": false
     },
     {
-      "id": "9",
+      "id": 9,
       "title": "Отцы и дети",
       "author": "Иван Тургенев",
       "year": 1862,
       "isRead": true
     },
     {
-      "id": "10",
+      "id": 10,
       "title": "Обломов",
       "author": "Иван Гончаров",
       "year": 1859,
       "isRead": false
     },
     {
-      "id": "11",
+      "id": 11,
       "title": "Вишнёвый сад",
       "author": "Антон Чехов",
       "year": 1904,
       "isRead": true
     },
     {
-      "id": "12",
+      "id": 12,
       "title": "Герой нашего времени",
       "author": "Михаил Лермонтов",
       "year": 1840,
       "isRead": false
     },
     {
-      "id": "13",
+      "id": 13,
       "title": "Собачье сердце",
       "author": "Михаил Булгаков",
       "year": 1925,
       "isRead": true
     },
     {
-      "id": "14",
+      "id": 14,
       "title": "Доктор Живаго",
       "author": "Борис Пастернак",
       "year": 1957,
       "isRead": false
     },
     {
-      "id": "15",
+      "id": 15,
       "title": "Тихий Дон",
       "author": "Михаил Шолохов",
       "year": 1940,
       "isRead": true
     },
     {
-      "id": "16",
+      "id": 16,
       "title": "Капитанская дочка",
       "author": "Александр Пушкин",
       "year": 1836,
       "isRead": false
     },
     {
-      "id": "17",
+      "id": 17,
       "title": "Ревизор",
       "author": "Николай Гоголь",
       "year": 1836,
       "isRead": true
     },
     {
-      "id": "18",
+      "id": 18,
       "title": "Воскресение",
       "author": "Лев Толстой",
       "year": 1899,
       "isRead": false
     },
     {
-      "id": "19",
+      "id": 19,
       "title": "Дама с собачкой",
       "author": "Антон Чехов",
       "year": 1899,
       "isRead": true
     },
     {
-      "id": "20",
+      "id": 20,
       "title": "Бесы",
       "author": "Фёдор Достоевский",
       "year": 1872,
       "isRead": false
     },
     {
-      "id": "21",
+      "id": 21,
       "title": "Что делать?",
       "author": "Николай Чернышевский",
       "year": 1863,
       "isRead": true
     },
     {
-      "id": "22",
+      "id": 22,
       "title": "Руслан и Людмила",
       "author": "Александр Пушкин",
       "year": 1820,
       "isRead": false
     },
     {
-      "id": "23",
+      "id": 23,
       "title": "Дворянское гнездо",
       "author": "Иван Тургенев",
       "year": 1859,
       "isRead": true
     },
     {
-      "id": "24",
+      "id": 24,
       "title": "Белая гвардия",
       "author": "Михаил Булгаков",
       "year": 1924,
       "isRead": false
     },
     {
-      "id": "25",
+      "id": 25,
       "title": "Горе от ума",
       "author": "Александр Грибоедов",
       "year": 1825,
       "isRead": true
     },
     {
-      "id": "26",
+      "id": 26,
       "title": "Записки охотника",
       "author": "Иван Тургенев",
       "year": 1852,
       "isRead": false
     },
     {
-      "id": "27",
+      "id": 27,
       "title": "Двенадцать стульев",
       "author": "Илья Ильф, Евгений Петров",
       "year": 1928,
       "isRead": true
     },
     {
-      "id": "28",
+      "id": 28,
       "title": "Золотой телёнок",
       "author": "Илья Ильф, Евгений Петров",
       "year": 1931,
       "isRead": false
     },
     {
-      "id": "29",
+      "id": 29,
       "title": "Детство",
       "author": "Максим Горький",
       "year": 1913,
       "isRead": true
     },
     {
-      "id": "30",
+      "id": 30,
       "title": "На дне",
       "author": "Максим Горький",
       "year": 1902,
