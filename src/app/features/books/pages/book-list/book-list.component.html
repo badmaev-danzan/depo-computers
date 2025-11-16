@@ -1,7 +1,3 @@
-<mat-toolbar color="primary">
-  <span>Библиотека книг</span>
-</mat-toolbar>
-
 <div class="container">
   <div class="actions-toolbar">
     <button mat-raised-button color="primary" (click)="onAdd()">
@@ -37,7 +33,7 @@
       Изменить статус
     </button>
   </div>
-
+  <hr>
   @if (isLoading()) {
     <div class="loading">Загрузка...</div>
   } @else if (books().length === 0) {
