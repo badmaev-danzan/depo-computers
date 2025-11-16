@@ -1,11 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { BookListComponent } from './features/books/pages/book-list/book-list.component';
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  imports: [BookListComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('depo-books');
-}
+export class App {}

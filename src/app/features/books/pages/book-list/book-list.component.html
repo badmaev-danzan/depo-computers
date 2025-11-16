@@ -1,0 +1,56 @@
+<mat-toolbar color="primary">
+  <span>Библиотека книг</span>
+</mat-toolbar>
+
+<div class="container">
+  @if (isLoading()) {
+    <div class="loading">Загрузка...</div>
+  } @else if (books().length === 0) {
+    <div class="empty-state">
+      <p>Список книг пуст</p>
+    </div>
+  } @else {
+    <table mat-table [dataSource]="books()" class="books-table">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let book">
+          <mat-checkbox
+            [checked]="isSelected(book.id)"
+            (change)="toggleSelection(book.id)"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Название</th>
+        <td mat-cell *matCellDef="let book">{{ book.title }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="author">
+        <th mat-header-cell *matHeaderCellDef>Автор</th>
+        <td mat-cell *matCellDef="let book">{{ book.author }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="year">
+        <th mat-header-cell *matHeaderCellDef>Год</th>
+        <td mat-cell *matCellDef="let book">{{ book.year }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="isRead">
+        <th mat-header-cell *matHeaderCellDef>Статус</th>
+        <td mat-cell *matCellDef="let book">
+          <span [class.read]="book.isRead" [class.unread]="!book.isRead">
+            {{ book.isRead ? 'Прочитано' : 'Не прочитано' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [class.selected]="isSelected(row.id)"
+      ></tr>
+    </table>
+  }
+</div>

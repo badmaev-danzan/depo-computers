@@ -1,0 +1,35 @@
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.loading,
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.books-table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.books-table tr.selected {
+  background-color: #f5f5f5;
+}
+
+.read {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.unread {
+  color: #ff9800;
+  font-weight: 500;
+}
+
+mat-toolbar {
+  margin-bottom: 20px;
+}
