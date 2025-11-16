@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { Book } from '../../../../shared/models/book.model';
 import { BookDialogComponent } from '../../components/book-dialog/book-dialog.component';
 import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
+import { NotificationService } from '../../../../core/services/notification.service';
 import { BooksActions } from '../../../../store/books/books.actions';
 import { selectAllBooks, selectBooksLoading } from '../../../../store/books/books.selectors';
 
@@ -26,6 +27,7 @@ import { selectAllBooks, selectBooksLoading } from '../../../../store/books/book
 export class BookListComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly dialog = inject(MatDialog);
+  private readonly notificationService = inject(NotificationService);
 
   protected readonly books = this.store.selectSignal(selectAllBooks);
   protected readonly isLoading = this.store.selectSignal(selectBooksLoading);
@@ -57,6 +59,7 @@ export class BookListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.store.dispatch(BooksActions.addBook({ book: result }));
+        this.notificationService.show('Книга успешно добавлена');
       }
     });
   }
@@ -78,6 +81,7 @@ export class BookListComponent implements OnInit {
       if (result) {
         this.store.dispatch(BooksActions.updateBook({ id: bookId, changes: result }));
         this.selectedBookId.set(null);
+        this.notificationService.show('Книга успешно обновлена');
       }
     });
   }
@@ -102,6 +106,7 @@ export class BookListComponent implements OnInit {
       if (confirmed) {
         this.store.dispatch(BooksActions.deleteBook({ id: bookId }));
         this.selectedBookId.set(null);
+        this.notificationService.show('Книга успешно удалена');
       }
     });
   }
@@ -111,5 +116,6 @@ export class BookListComponent implements OnInit {
 
     const bookId = this.selectedBookId()!;
     this.store.dispatch(BooksActions.toggleBookReadStatus({ id: bookId }));
+    this.notificationService.show('Статус книги изменён');
   }
 }
