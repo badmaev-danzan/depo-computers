@@ -1,5 +1,7 @@
 mat-dialog-content {
   padding: 20px 24px;
+  overflow: visible !important;
+  max-height: none !important;
 }
 
 form {

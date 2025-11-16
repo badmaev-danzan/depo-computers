@@ -1,78 +1,85 @@
 <div class="container">
-  <div class="actions-toolbar">
-    <button mat-raised-button color="primary" (click)="onAdd()">
-      <mat-icon>add</mat-icon>
-      Добавить
-    </button>
-
-    <button
-      mat-raised-button
-      [disabled]="!hasSelection()"
-      (click)="onEdit()"
-    >
-      <mat-icon>edit</mat-icon>
-      Редактировать
-    </button>
-
-    <button
-      mat-raised-button
-      color="warn"
-      [disabled]="!hasSelection()"
-      (click)="onDelete()"
-    >
-      <mat-icon>delete</mat-icon>
-      Удалить
-    </button>
-
-    <button
-      mat-raised-button
-      [disabled]="!hasSelection()"
-      (click)="onToggleReadStatus()"
-    >
-      <mat-icon>import_contacts</mat-icon>
-      Изменить статус
-    </button>
+  <div class="page-header">
+    <h1 class="page-title">Библиотека книг</h1>
+    <p class="page-subtitle">Тестовое задание от Depo Computers</p>
   </div>
-  <hr>
-  @if (isLoading()) {
-    <div class="loading">Загрузка...</div>
-  } @else if (books().length === 0) {
-    <div class="empty-state">
-      <p>Список книг пуст</p>
+
+  <div class="content-card">
+    <div class="actions-toolbar">
+      <button mat-raised-button color="primary" (click)="onAdd()">
+        <mat-icon>add</mat-icon>
+        Добавить
+      </button>
+
+      <button
+        mat-raised-button
+        [disabled]="!hasSelection()"
+        (click)="onEdit()"
+      >
+        <mat-icon>edit</mat-icon>
+        Редактировать
+      </button>
+
+      <button
+        mat-raised-button
+        color="warn"
+        [disabled]="!hasSelection()"
+        (click)="onDelete()"
+      >
+        <mat-icon>delete</mat-icon>
+        Удалить
+      </button>
+
+      <button
+        mat-raised-button
+        [disabled]="!hasSelection()"
+        (click)="onToggleReadStatus()"
+      >
+        <mat-icon>import_contacts</mat-icon>
+        Изменить статус
+      </button>
     </div>
-  } @else {
-    <table mat-table [dataSource]="books()" class="books-table">
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef>Название</th>
-        <td mat-cell *matCellDef="let book">{{ book.title }}</td>
-      </ng-container>
+    <hr>
+    @if (isLoading()) {
+      <div class="loading">Загрузка...</div>
+    } @else if (books().length === 0) {
+      <div class="empty-state">
+        <p>Список книг пуст</p>
+      </div>
+    } @else {
+      <table mat-table [dataSource]="books()" class="books-table">
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Название</th>
+          <td mat-cell *matCellDef="let book">{{ book.title }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="author">
-        <th mat-header-cell *matHeaderCellDef>Автор</th>
-        <td mat-cell *matCellDef="let book">{{ book.author }}</td>
-      </ng-container>
+        <ng-container matColumnDef="author">
+          <th mat-header-cell *matHeaderCellDef>Автор</th>
+          <td mat-cell *matCellDef="let book">{{ book.author }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="year">
-        <th mat-header-cell *matHeaderCellDef>Год</th>
-        <td mat-cell *matCellDef="let book">{{ book.year }}</td>
-      </ng-container>
+        <ng-container matColumnDef="year">
+          <th mat-header-cell *matHeaderCellDef>Год</th>
+          <td mat-cell *matCellDef="let book">{{ book.year }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="isRead">
-        <th mat-header-cell *matHeaderCellDef>Статус</th>
-        <td mat-cell *matCellDef="let book">
-          <span [class.read]="book.isRead" [class.unread]="!book.isRead">
-            {{ book.isRead ? 'Прочитано' : 'Не прочитано' }}
-          </span>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="isRead">
+          <th mat-header-cell *matHeaderCellDef>Статус</th>
+          <td mat-cell *matCellDef="let book">
+            <span [class.read]="book.isRead" [class.unread]="!book.isRead">
+              {{ book.isRead ? 'Прочитано' : 'Не прочитано' }}
+            </span>
+          </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        [class.selected]="isSelected(row.id)"
-        (click)="onRowClick(row.id)"
-      ></tr>
-    </table>
-  }
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [class.selected]="isSelected(row.id)"
+          (click)="onRowClick(row.id)"
+        ></tr>
+      </table>
+    }
+  </div>
 </div>
