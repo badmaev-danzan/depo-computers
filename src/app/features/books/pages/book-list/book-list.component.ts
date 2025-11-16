@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Book } from '../../../../shared/models/book.model';
 import { BookDialogComponent } from '../../components/book-dialog/book-dialog.component';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
 import { BooksActions } from '../../../../store/books/books.actions';
 import { selectAllBooks, selectBooksLoading } from '../../../../store/books/books.selectors';
 
@@ -85,11 +86,24 @@ export class BookListComponent implements OnInit {
     if (!this.hasSelection()) return;
 
     const bookId = this.selectedBookId()!;
+    const book = this.books().find(b => b.id === bookId);
 
-    if (confirm('Удалить эту книгу?')) {
-      this.store.dispatch(BooksActions.deleteBook({ id: bookId }));
-      this.selectedBookId.set(null);
-    }
+    if (!book) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Подтверждение удаления',
+        message: `Вы уверены, что хотите удалить книгу "${book.title}"?`
+      },
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.store.dispatch(BooksActions.deleteBook({ id: bookId }));
+        this.selectedBookId.set(null);
+      }
+    });
   }
 
   protected onToggleReadStatus(): void {
