@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Book } from '../../shared/models/book.model';
+import { Book } from '../../shared/models';
 import { ICrudService } from './crud.interface';
 import { environment } from '../../../environments/environment';
 

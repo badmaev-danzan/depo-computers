@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Book } from '../../../../shared/models/book.model';
+import { Book } from '../../../../shared/models';
 
 export interface BookDialogData {
   book?: Book;

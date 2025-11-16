@@ -5,12 +5,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Book } from '../../../../shared/models/book.model';
-import { BookDialogComponent } from '../../components/book-dialog/book-dialog.component';
-import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
-import { NotificationService } from '../../../../core/services/notification.service';
-import { BooksActions } from '../../../../store/books/books.actions';
-import { selectAllBooks, selectBooksLoading } from '../../../../store/books/books.selectors';
+import { Book } from '../../../../shared/models';
+import { BookDialogComponent, ConfirmDialogComponent } from '../../components';
+import { NotificationService } from '../../../../core/services';
+import { BooksActions, selectAllBooks, selectBooksLoading } from '../../../../store/books';
 
 @Component({
   selector: 'app-book-list',
