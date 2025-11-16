@@ -4,8 +4,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialog } from '@angular/material/dialog';
 import { Book } from '../../../../shared/models/book.model';
 import { BookService } from '../../../../core/services/book.service';
+import { BookDialogComponent } from '../../components/book-dialog/book-dialog.component';
 
 @Component({
   selector: 'app-book-list',
@@ -22,6 +24,7 @@ import { BookService } from '../../../../core/services/book.service';
 })
 export class BookListComponent implements OnInit {
   private readonly bookService = inject(BookService);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly books = signal<Book[]>([]);
   protected readonly selectedBooks = signal<Set<number>>(new Set());
@@ -69,9 +72,51 @@ export class BookListComponent implements OnInit {
   }
 
   protected onAdd(): void {
+    const dialogRef = this.dialog.open(BookDialogComponent, {
+      data: { mode: 'add' },
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.bookService.create(result).subscribe({
+          next: () => {
+            this.loadBooks();
+          },
+          error: () => {
+            alert('Ошибка добавления книги');
+          }
+        });
+      }
+    });
   }
 
   protected onEdit(): void {
+    if (!this.hasSingleSelection()) return;
+
+    const bookId = Array.from(this.selectedBooks())[0];
+    const book = this.books().find(b => b.id === bookId);
+
+    if (!book) return;
+
+    const dialogRef = this.dialog.open(BookDialogComponent, {
+      data: { mode: 'edit', book },
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.bookService.update(bookId, result).subscribe({
+          next: () => {
+            this.loadBooks();
+            this.selectedBooks.set(new Set());
+          },
+          error: () => {
+            alert('Ошибка обновления книги');
+          }
+        });
+      }
+    });
   }
 
   protected onDelete(): void {

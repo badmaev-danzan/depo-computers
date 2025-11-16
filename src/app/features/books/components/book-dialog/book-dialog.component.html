@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>Название</mat-label>
+      <input matInput formControlName="title" />
+      @if (form.get('title')?.hasError('required')) {
+        <mat-error>Название обязательно</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Автор</mat-label>
+      <input matInput formControlName="author" />
+      @if (form.get('author')?.hasError('required')) {
+        <mat-error>Автор обязателен</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Год издания</mat-label>
+      <input matInput type="number" formControlName="year" />
+      @if (form.get('year')?.hasError('required')) {
+        <mat-error>Год обязателен</mat-error>
+      }
+      @if (form.get('year')?.hasError('min') || form.get('year')?.hasError('max')) {
+        <mat-error>Год должен быть от 1000 до 9999</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-checkbox formControlName="isRead">Прочитано</mat-checkbox>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Отмена</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid">
+    Сохранить
+  </button>
+</mat-dialog-actions>
