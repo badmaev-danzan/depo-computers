@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, signal, inject, OnInit } from '@ang
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -20,7 +19,6 @@ import { selectAllBooks, selectBooksLoading } from '../../../../store/books/book
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    MatCheckboxModule,
     MatToolbarModule
   ]
 })
@@ -30,33 +28,23 @@ export class BookListComponent implements OnInit {
 
   protected readonly books = this.store.selectSignal(selectAllBooks);
   protected readonly isLoading = this.store.selectSignal(selectBooksLoading);
-  protected readonly selectedBooks = signal<Set<number>>(new Set());
-  protected readonly displayedColumns = ['select', 'title', 'author', 'year', 'isRead'];
+  protected readonly selectedBookId = signal<number | null>(null);
+  protected readonly displayedColumns = ['title', 'author', 'year', 'isRead'];
 
   ngOnInit(): void {
     this.store.dispatch(BooksActions.loadBooks());
   }
 
-  protected toggleSelection(bookId: number): void {
-    const selected = new Set(this.selectedBooks());
-    if (selected.has(bookId)) {
-      selected.delete(bookId);
-    } else {
-      selected.add(bookId);
-    }
-    this.selectedBooks.set(selected);
+  protected onRowClick(bookId: number): void {
+    this.selectedBookId.set(bookId);
   }
 
   protected isSelected(bookId: number): boolean {
-    return this.selectedBooks().has(bookId);
+    return this.selectedBookId() === bookId;
   }
 
   protected hasSelection(): boolean {
-    return this.selectedBooks().size > 0;
-  }
-
-  protected hasSingleSelection(): boolean {
-    return this.selectedBooks().size === 1;
+    return this.selectedBookId() !== null;
   }
 
   protected onAdd(): void {
@@ -73,9 +61,9 @@ export class BookListComponent implements OnInit {
   }
 
   protected onEdit(): void {
-    if (!this.hasSingleSelection()) return;
+    if (!this.hasSelection()) return;
 
-    const bookId = Array.from(this.selectedBooks())[0];
+    const bookId = this.selectedBookId()!;
     const book = this.books().find(b => b.id === bookId);
 
     if (!book) return;
@@ -88,7 +76,7 @@ export class BookListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.store.dispatch(BooksActions.updateBook({ id: bookId, changes: result }));
-        this.selectedBooks.set(new Set());
+        this.selectedBookId.set(null);
       }
     });
   }
@@ -96,26 +84,18 @@ export class BookListComponent implements OnInit {
   protected onDelete(): void {
     if (!this.hasSelection()) return;
 
-    const selectedIds = Array.from(this.selectedBooks());
-    const confirmMessage = selectedIds.length === 1
-      ? 'Удалить эту книгу?'
-      : `Удалить ${selectedIds.length} книг(и)?`;
+    const bookId = this.selectedBookId()!;
 
-    if (confirm(confirmMessage)) {
-      selectedIds.forEach(id => {
-        this.store.dispatch(BooksActions.deleteBook({ id }));
-      });
-      this.selectedBooks.set(new Set());
+    if (confirm('Удалить эту книгу?')) {
+      this.store.dispatch(BooksActions.deleteBook({ id: bookId }));
+      this.selectedBookId.set(null);
     }
   }
 
   protected onToggleReadStatus(): void {
     if (!this.hasSelection()) return;
 
-    const selectedIds = Array.from(this.selectedBooks());
-
-    selectedIds.forEach(id => {
-      this.store.dispatch(BooksActions.toggleBookReadStatus({ id }));
-    });
+    const bookId = this.selectedBookId()!;
+    this.store.dispatch(BooksActions.toggleBookReadStatus({ id: bookId }));
   }
 }
