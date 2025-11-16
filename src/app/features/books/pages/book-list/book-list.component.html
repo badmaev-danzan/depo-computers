@@ -3,6 +3,41 @@
 </mat-toolbar>
 
 <div class="container">
+  <div class="actions-toolbar">
+    <button mat-raised-button color="primary" (click)="onAdd()">
+      <mat-icon>add</mat-icon>
+      Добавить
+    </button>
+
+    <button
+      mat-raised-button
+      [disabled]="!hasSingleSelection()"
+      (click)="onEdit()"
+    >
+      <mat-icon>edit</mat-icon>
+      Редактировать
+    </button>
+
+    <button
+      mat-raised-button
+      color="warn"
+      [disabled]="!hasSelection()"
+      (click)="onDelete()"
+    >
+      <mat-icon>delete</mat-icon>
+      Удалить
+    </button>
+
+    <button
+      mat-raised-button
+      [disabled]="!hasSelection()"
+      (click)="onToggleReadStatus()"
+    >
+      <mat-icon>import_contacts</mat-icon>
+      Изменить статус
+    </button>
+  </div>
+
   @if (isLoading()) {
     <div class="loading">Загрузка...</div>
   } @else if (books().length === 0) {

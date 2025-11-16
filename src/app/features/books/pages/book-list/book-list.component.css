@@ -4,6 +4,12 @@
   margin: 0 auto;
 }
 
+.actions-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
 .loading,
 .empty-state {
   text-align: center;

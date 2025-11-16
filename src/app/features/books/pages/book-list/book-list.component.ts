@@ -59,4 +59,69 @@ export class BookListComponent implements OnInit {
   protected isSelected(bookId: number): boolean {
     return this.selectedBooks().has(bookId);
   }
+
+  protected hasSelection(): boolean {
+    return this.selectedBooks().size > 0;
+  }
+
+  protected hasSingleSelection(): boolean {
+    return this.selectedBooks().size === 1;
+  }
+
+  protected onAdd(): void {
+  }
+
+  protected onEdit(): void {
+  }
+
+  protected onDelete(): void {
+    if (!this.hasSelection()) return;
+
+    const selectedIds = Array.from(this.selectedBooks());
+    const confirmMessage = selectedIds.length === 1
+      ? 'Удалить эту книгу?'
+      : `Удалить ${selectedIds.length} книг(и)?`;
+
+    if (confirm(confirmMessage)) {
+      this.deleteBooks(selectedIds, 0);
+    }
+  }
+
+  private deleteBooks(ids: number[], index: number): void {
+    if (index >= ids.length) {
+      this.selectedBooks.set(new Set());
+      return;
+    }
+
+    this.bookService.delete(ids[index]).subscribe({
+      next: () => {
+        this.loadBooks();
+        this.deleteBooks(ids, index + 1);
+      },
+      error: () => {
+        alert('Ошибка удаления книги');
+      }
+    });
+  }
+
+  protected onToggleReadStatus(): void {
+    if (!this.hasSelection()) return;
+
+    const selectedIds = Array.from(this.selectedBooks());
+    const currentBooks = this.books();
+
+    selectedIds.forEach(id => {
+      const book = currentBooks.find(b => b.id === id);
+      if (book) {
+        this.bookService.update(id, { isRead: !book.isRead }).subscribe({
+          next: () => {
+            this.loadBooks();
+          },
+          error: (error) => {
+            alert('Ошибка обновления статуса');
+          }
+        });
+      }
+    });
+  }
 }
