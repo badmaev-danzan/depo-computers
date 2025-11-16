@@ -1,13 +1,15 @@
-import { Component, ChangeDetectionStrategy, signal, inject, OnInit, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialog } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 import { Book } from '../../../../shared/models/book.model';
-import { BookService } from '../../../../core/services/book.service';
 import { BookDialogComponent } from '../../components/book-dialog/book-dialog.component';
+import { BooksActions } from '../../../../store/books/books.actions';
+import { selectAllBooks, selectBooksLoading } from '../../../../store/books/books.selectors';
 
 @Component({
   selector: 'app-book-list',
@@ -23,33 +25,16 @@ import { BookDialogComponent } from '../../components/book-dialog/book-dialog.co
   ]
 })
 export class BookListComponent implements OnInit {
-  private readonly bookService = inject(BookService);
+  private readonly store = inject(Store);
   private readonly dialog = inject(MatDialog);
 
-  private readonly booksData = signal<Book[]>([]);
-  protected readonly books = computed(() =>
-    [...this.booksData()].sort((a, b) => Number(b.id) - Number(a.id))
-  );
+  protected readonly books = this.store.selectSignal(selectAllBooks);
+  protected readonly isLoading = this.store.selectSignal(selectBooksLoading);
   protected readonly selectedBooks = signal<Set<number>>(new Set());
   protected readonly displayedColumns = ['select', 'title', 'author', 'year', 'isRead'];
-  protected readonly isLoading = signal(false);
 
   ngOnInit(): void {
-    this.loadBooks();
-  }
-
-  private loadBooks(): void {
-    this.isLoading.set(true);
-    this.bookService.getAll().subscribe({
-      next: (books) => {
-        this.booksData.set(books);
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Ошибка загрузки книг:', error);
-        this.isLoading.set(false);
-      }
-    });
+    this.store.dispatch(BooksActions.loadBooks());
   }
 
   protected toggleSelection(bookId: number): void {
@@ -82,14 +67,7 @@ export class BookListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.bookService.create(result).subscribe({
-          next: () => {
-            this.loadBooks();
-          },
-          error: () => {
-            alert('Ошибка добавления книги');
-          }
-        });
+        this.store.dispatch(BooksActions.addBook({ book: result }));
       }
     });
   }
@@ -109,15 +87,8 @@ export class BookListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.bookService.update(bookId, result).subscribe({
-          next: () => {
-            this.loadBooks();
-            this.selectedBooks.set(new Set());
-          },
-          error: () => {
-            alert('Ошибка обновления книги');
-          }
-        });
+        this.store.dispatch(BooksActions.updateBook({ id: bookId, changes: result }));
+        this.selectedBooks.set(new Set());
       }
     });
   }
@@ -131,45 +102,20 @@ export class BookListComponent implements OnInit {
       : `Удалить ${selectedIds.length} книг(и)?`;
 
     if (confirm(confirmMessage)) {
-      this.deleteBooks(selectedIds, 0);
-    }
-  }
-
-  private deleteBooks(ids: number[], index: number): void {
-    if (index >= ids.length) {
+      selectedIds.forEach(id => {
+        this.store.dispatch(BooksActions.deleteBook({ id }));
+      });
       this.selectedBooks.set(new Set());
-      return;
     }
-
-    this.bookService.delete(ids[index]).subscribe({
-      next: () => {
-        this.loadBooks();
-        this.deleteBooks(ids, index + 1);
-      },
-      error: () => {
-        alert('Ошибка удаления книги');
-      }
-    });
   }
 
   protected onToggleReadStatus(): void {
     if (!this.hasSelection()) return;
 
     const selectedIds = Array.from(this.selectedBooks());
-    const currentBooks = this.books();
 
     selectedIds.forEach(id => {
-      const book = currentBooks.find(b => b.id === id);
-      if (book) {
-        this.bookService.update(id, { isRead: !book.isRead }).subscribe({
-          next: () => {
-            this.loadBooks();
-          },
-          error: (error) => {
-            alert('Ошибка обновления статуса');
-          }
-        });
-      }
+      this.store.dispatch(BooksActions.toggleBookReadStatus({ id }));
     });
   }
 }
