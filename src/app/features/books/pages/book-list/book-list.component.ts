@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, signal, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, OnInit, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +27,7 @@ export class BookListComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly dialog = inject(MatDialog);
   private readonly notificationService = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly books = this.store.selectSignal(selectAllBooks);
   protected readonly isLoading = this.store.selectSignal(selectBooksLoading);
@@ -54,12 +56,14 @@ export class BookListComponent implements OnInit {
       width: '500px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.store.dispatch(BooksActions.addBook({ book: result }));
-        this.notificationService.show('Книга успешно добавлена');
-      }
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => {
+        if (result) {
+          this.store.dispatch(BooksActions.addBook({ book: result }));
+          this.notificationService.show('Книга успешно добавлена');
+        }
+      });
   }
 
   protected onEdit(): void {
@@ -75,13 +79,15 @@ export class BookListComponent implements OnInit {
       width: '500px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.store.dispatch(BooksActions.updateBook({ id: bookId, changes: result }));
-        this.selectedBookId.set(null);
-        this.notificationService.show('Книга успешно обновлена');
-      }
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => {
+        if (result) {
+          this.store.dispatch(BooksActions.updateBook({ id: bookId, changes: result }));
+          this.selectedBookId.set(null);
+          this.notificationService.show('Книга успешно обновлена');
+        }
+      });
   }
 
   protected onDelete(): void {
@@ -100,13 +106,15 @@ export class BookListComponent implements OnInit {
       width: '400px'
     });
 
-    dialogRef.afterClosed().subscribe(confirmed => {
-      if (confirmed) {
-        this.store.dispatch(BooksActions.deleteBook({ id: bookId }));
-        this.selectedBookId.set(null);
-        this.notificationService.show('Книга успешно удалена');
-      }
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(confirmed => {
+        if (confirmed) {
+          this.store.dispatch(BooksActions.deleteBook({ id: bookId }));
+          this.selectedBookId.set(null);
+          this.notificationService.show('Книга успешно удалена');
+        }
+      });
   }
 
   protected onToggleReadStatus(): void {
